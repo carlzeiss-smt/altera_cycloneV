@@ -1,0 +1,45 @@
+# Description: Patch for BitBake recipe from Critical Link
+# to allow one to use a local git repo. The repo should be
+# deployed in / (but this can be easily changed).
+# This might be useful for using Yocto since at the time
+# of writting the repos from Critical Link only support the
+# git protocol (no http or https), which port might be blocked
+# in some cases.
+#
+# =====================================================================
+#
+# Copyright (C) 2015-2017 Alexandre Lopes, Carl Zeiss SMT GmbH 
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+diff -rupN meta-mitysom-5csx/recipes-kernel/linux/linux-libc-headers-mitysom-5csx.inc meta-mitysom-5csx_patched/recipes-kernel/linux/linux-libc-headers-mitysom-5csx.inc
+--- meta-mitysom-5csx/recipes-kernel/linux/linux-libc-headers-mitysom-5csx.inc	2015-03-10 11:47:01.000000000 +0100
++++ meta-mitysom-5csx_patched/recipes-kernel/linux/linux-libc-headers-mitysom-5csx.inc	2015-03-12 10:52:46.304103905 +0100
+@@ -12,7 +12,7 @@ PR = "r1"
+ 
+ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+ 
+-SRC_URI = "git://support.criticallink.com/home/git/linux-socfpga.git;protocol=git;branch=socfpga-${PV} \
++SRC_URI = "git:///linux-socfpga.git;protocol=file;branch=socfpga-${PV} \
+ 	   file://0001-ptrace.h-remove-ptrace_peeksiginfo_args.patch \
+ 	   "
+ 
+diff -rupN meta-mitysom-5csx/recipes-kernel/linux/linux-mitysom-5csx.inc meta-mitysom-5csx_patched/recipes-kernel/linux/linux-mitysom-5csx.inc
+--- meta-mitysom-5csx/recipes-kernel/linux/linux-mitysom-5csx.inc	2015-03-10 11:47:01.000000000 +0100
++++ meta-mitysom-5csx_patched/recipes-kernel/linux/linux-mitysom-5csx.inc	2015-03-12 10:52:59.328103530 +0100
+@@ -1,5 +1,6 @@
+ PR = "r1"
+-SRC_URI = "git://support.criticallink.com/home/git/linux-socfpga.git;protocol=git;branch=socfpga-${PV}"
++SRC_URI = "git:///linux-socfpga.git;protocol=file;branch=socfpga-${PV}"
++
+ 
+ SRCREV_pn-${PN} = "${AUTOREV}"
+ 

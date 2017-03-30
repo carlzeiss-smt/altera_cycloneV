@@ -1,0 +1,61 @@
+# Description: Patch for Linux kernel 3.18.9
+# already patched for the MitySoM. This patch
+# changes the DTS to make use of PCI-e 
+#
+# =====================================================================
+#
+# Copyright (C) 2015-2017 Alexandre Lopes, Carl Zeiss SMT GmbH 
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+--- linux-3.18.9/arch/arm/boot/dts/socfpga_mitysom5csx_devkit.dts	2015-03-27 20:57:15.224869780 +0100
++++ linux-3.18.9_pci/arch/arm/boot/dts/socfpga_mitysom5csx_devkit.dts	2015-05-27 09:44:07.149797437 +0200
+@@ -40,6 +40,8 @@
+ 	};
+ 
+ 	soc {
++
++
+ 		clkmgr@ffd04000 {
+ 			clocks {
+ 				osc1 {
+@@ -48,6 +50,31 @@
+ 			};
+ 		};
+ 
++
++		pcie_0: pcie@0x0 {                                              
++			compatible = "altr,pcie-root-port-1.0";                  
++			reg = < 0xc0000000 0x20000000                            
++				   0xFF240000 0x00004000  >;                        
++			reg-names = "Txs", "Cra";                                
++			interrupt-parent = < &intc>;                             
++			interrupts = < 0 40 4 >;                                 
++			interrupt-controller;                                    
++			#interrupt-cells = < 1 >;                                
++			altr,msi = <&msi0>;                                      
++			device_type = "pci";                                     
++		};                                                              
++
++		msi0: msi@0xFF200000 {                                          
++			compatible = "altr,msi-1.0";                             
++			reg = < 0xFF200000 0x00000010                            
++				   0xFF200010 0x00000080 >;                         
++			reg-names = "csr", "vector_slave";                       
++			interrupt-parent = < &intc>;                             
++			interrupts = < 0 42 4 >;                                 
++			msi-controller = < 1 >;                                  
++			num-vectors = < 32 >;                                    
++		};    
++
+ 		/* On DevKit Board */
+ 		dcan0: d_can@ffc00000 {
+ 			status = "okay";
